@@ -10,4 +10,8 @@ export const translate = {
     NO_ACCOUNT: "Don't have an account?",
     REGISTER: "Register",
   },
+  HOME_PAGE: {
+    SIGN_OUT: "Sign out",
+    WELCOME: "WELCOME, ",
+  },
 };

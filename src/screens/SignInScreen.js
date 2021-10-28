@@ -1,16 +1,17 @@
 /** @format */
 
-import React from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  KeyboardAvoidingView,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { auth } from "../../firebase";
 import { COLOR } from "../libs/common/color";
+import { AppContext } from "../libs/context/AppProvider";
 import { translate } from "../libs/locales";
 import { BASE_STYLES } from "../libs/styles/style";
 
@@ -51,27 +52,52 @@ const btn_signUp = [
   { borderColor: COLOR.GREY, backgroundColor: COLOR.WHITE },
 ];
 
-const SignInScreen = () => {
-  console.log();
+export const SignInScreen = () => {
+  const [email, setEmail] = useState("huypro1@gmail.com");
+  const [password, setPassword] = useState("123456");
+  // const { setVisibleModal, isSignOut, setIsSignOut } = useContext(AppContext);
+  const { setVisibleModal } = useContext(AppContext);
+
+  const onRegister = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {})
+      .catch((error) => error && setVisibleModal(true));
+  };
+
+  const onLogin = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredentials) => {})
+      .catch((error) => {
+        error && setVisibleModal(true);
+      });
+  };
+
   return (
     <View style={container}>
       <ScrollView contentContainerStyle={content}>
-        <TextInput placeholder={translate.SIGN_IN.EMAIL} style={input} />
+        <TextInput
+          placeholder={translate.SIGN_IN.EMAIL}
+          style={input}
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+        />
         <TextInput
           placeholder={translate.SIGN_IN.PASSWORD}
           secureTextEntry
           style={input}
+          value={password}
+          onChangeText={(password) => setPassword(password)}
         />
 
-        <TouchableOpacity style={btn_signIn}>
+        <TouchableOpacity style={btn_signIn} onPress={onLogin}>
           <Text style={{ color: COLOR.WHITE }}>{translate.SIGN_IN.BTN}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={btn_signUp}>
+        <TouchableOpacity style={btn_signUp} onPress={onRegister}>
           <Text>{translate.SIGN_IN.REGISTER}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
   );
 };
-
-export default SignInScreen;
